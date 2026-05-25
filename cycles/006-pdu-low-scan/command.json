@@ -1,0 +1,43 @@
+{
+  "posted_at": "2026-05-25T20:43:49Z",
+  "request": {
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "kind": "bleStartSweep",
+    "args": {
+      "tx_ecu": "740",
+      "rx_ecu": "748",
+      "start_did": "0001",
+      "end_did": "00FF",
+      "period_ms": 250,
+      "car_state": "parked_ready_off_climate_off",
+      "notes": "Cycle 6 — PDU low-byte scan; pack current candidate ECU per known_dids open Q#1"
+    },
+    "timeout_ms": 120000
+  },
+  "response": {
+    "id": 13,
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
+    "kind": "bleStartSweep",
+    "args": {
+      "notes": "Cycle 6 — PDU low-byte scan; pack current candidate ECU per known_dids open Q#1",
+      "rx_ecu": "748",
+      "tx_ecu": "740",
+      "end_did": "00FF",
+      "car_state": "parked_ready_off_climate_off",
+      "period_ms": 250,
+      "start_did": "0001"
+    },
+    "status": "error",
+    "created_by": "admin",
+    "created_at": "2026-05-25T20:43:49.700169Z",
+    "dispatched_at": "2026-05-25T20:43:50.703494Z",
+    "finished_at": "2026-05-25T20:43:50.823478Z",
+    "result": null,
+    "error": "No live BLE link to ELM327; pair the adapter first",
+    "error_kind": "not_connected",
+    "timeout_ms": 120000,
+    "expires_at": "2026-05-25T20:50:49.700169Z"
+  },
+  "outcome": "cmd 13 ack=error in 120 ms after dispatch. error='No live BLE link to ELM327; pair the adapter first'. error_kind='not_connected'. No sweep started, no sweep_runs row ingested. Operational issue (BLE pair to OBD adapter is down), NOT a client bug — client cleanly reports the precondition failure."
+}
