@@ -57,3 +57,25 @@ These are gaps the research aims to fill:
 4. **HVAC ECU identity** — no HVAC ECU tx/rx pair documented. Either
    responds on an undiscovered ID, or HVAC state is in VCU/PDU but
    under a DID we haven't read, or the climate system uses HAL not OBD.
+
+## Server-side schema reference
+
+For analysis.md writers consuming raw/sweep_results.csv:
+
+**sweep_runs columns**: `id, device_id, vehicle_id, client_sweep_id,
+started_at, ended_at, tx_ecu, rx_ecu, start_did, end_did, period_ms,
+car_state, notes, total_probes, valid_responses, received_at`.
+Unique on `(device_id, client_sweep_id)`.
+
+**sweep_results columns**: `id, sweep_run_id, did, raw_hex, error_code,
+sequence`. Indexed on `(sweep_run_id, sequence)`.
+
+Derived semantics:
+- **Success**: `raw_hex IS NOT NULL` (ECU returned bytes).
+- **ECU error**: `error_code IS NOT NULL` (UDS NRC like 7F / 31 / 22).
+- **Skipped / timeout**: both NULL.
+- **Per-DID timestamp** is not stored; reconstruct as
+  `sweep_runs.started_at + (sequence - 1) × period_ms`. Sufficient for
+  baseline analysis. For precise timing → use live_log_entries instead.
+
+When filtering responding DIDs: `WHERE raw_hex IS NOT NULL`.

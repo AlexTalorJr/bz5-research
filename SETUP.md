@@ -5,6 +5,8 @@
 - **GitHub repo URL**: https://github.com/AlexTalorJr/bz5-research (public)
 - **Local clone path**: `/Users/alexandrbaiko/development/bz5-research`
 - **Helper invocation**: `~/development/bz5-research/bz5-snap.sh` (или установить `BZ5_RESEARCH_DIR` env var и звать `bz5-snap` из любого места — см. шаг 5)
+- **Head unit device_id**: `ad0a7859-fb2e-4a28-82dc-1367e132d0d1` (display_name=head, kind=headunit). Используется bridge Claude'ом в `POST /v1/admin/commands` payload'е. Может смениться после `make test` инцидента; bridge Claude перечитывает через `/v1/admin/devices` перед каждым POST'ом.
+- **GitHub identity bridge Claude'а**: commits идут под author'ом `alex via Claude (bridge) <a.baiko@naveksoft.com>` через owner'ский PAT (committer = AlexTalorJr). В GitHub UI commit'ы припишутся аватарке owner'а; не блокер, при необходимости можно завести отдельный bot-аккаунт позже.
 
 Эти detail'ы зафиксированы здесь чтобы будущая Claude-сессия знала
 где локально лежит clone и не задавала повторные вопросы при start'е.
