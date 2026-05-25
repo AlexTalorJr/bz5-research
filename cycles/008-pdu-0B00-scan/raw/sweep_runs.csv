@@ -1,0 +1,2 @@
+id,device_id,vehicle_id,client_sweep_id,started_at,ended_at,tx_ecu,rx_ecu,start_did,end_did,period_ms,car_state,notes,total_probes,valid_responses,received_at
+4,26305a60-09ec-4c6d-9627-a295141d5ea3,842665c4-a20b-4c6f-bc9c-ece32bf58cc8,3,2026-05-25 21:14:22+00,2026-05-25 21:14:49+00,740,748,0B00,0BFF,250,,started via bridge command,256,0,2026-05-25 21:15:14.589439+00

@@ -1,0 +1,46 @@
+{
+  "posted_at": "2026-05-25T21:14:14Z",
+  "request": {
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "kind": "bleStartSweep",
+    "args": {
+      "tx_ecu": "740",
+      "rx_ecu": "748",
+      "start_did": "0B00",
+      "end_did": "0BFF",
+      "period_ms": 250,
+      "car_state": "parked_ready_off_climate_off",
+      "notes": "Cycle 8 — PDU 0B00 grouped-data range; mirrors BMS 0B02 cycle-count convention"
+    },
+    "timeout_ms": 120000
+  },
+  "response": {
+    "id": 17,
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
+    "kind": "bleStartSweep",
+    "args": {
+      "notes": "Cycle 8 — PDU 0B00 grouped-data range; mirrors BMS 0B02 cycle-count convention",
+      "rx_ecu": "748",
+      "tx_ecu": "740",
+      "end_did": "0BFF",
+      "car_state": "parked_ready_off_climate_off",
+      "period_ms": 250,
+      "start_did": "0B00"
+    },
+    "status": "ok",
+    "created_by": "admin",
+    "created_at": "2026-05-25T21:14:14.696025Z",
+    "dispatched_at": "2026-05-25T21:14:14.753961Z",
+    "finished_at": "2026-05-25T21:14:14.734427Z",
+    "result": {
+      "kind": "sweep",
+      "started": true
+    },
+    "error": null,
+    "error_kind": null,
+    "timeout_ms": 120000,
+    "expires_at": "2026-05-25T21:21:14.696025Z"
+  },
+  "outcome": "ack=ok in 11s, sweep_run id=4 ended 35s later. 256 probed, 0 valid, all NRC 7F2231."
+}
