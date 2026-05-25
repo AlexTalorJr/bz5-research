@@ -1,0 +1,42 @@
+{
+  "posted_at": "2026-05-25T15:41:24Z",
+  "request": {
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "kind": "bleStartSweep",
+    "args": {
+      "tx_ecu": "791",
+      "rx_ecu": "799",
+      "start_did": "0001",
+      "end_did": "00FF",
+      "period_ms": 250,
+      "car_state": "ready_idle_climate_off",
+      "notes": "Cycle 1 — VCU low-byte scan for power/current DIDs"
+    },
+    "timeout_ms": 120000
+  },
+  "response": {
+    "id": 1,
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
+    "kind": "bleStartSweep",
+    "args": {
+      "notes": "Cycle 1 — VCU low-byte scan for power/current DIDs",
+      "rx_ecu": "799",
+      "tx_ecu": "791",
+      "end_did": "00FF",
+      "car_state": "ready_idle_climate_off",
+      "period_ms": 250,
+      "start_did": "0001"
+    },
+    "status": "pending",
+    "created_by": "admin",
+    "created_at": "2026-05-25T15:41:24.756923Z",
+    "dispatched_at": null,
+    "finished_at": null,
+    "result": null,
+    "error": null,
+    "error_kind": null,
+    "timeout_ms": 120000,
+    "expires_at": "2026-05-25T15:48:24.756923Z"
+  }
+}
