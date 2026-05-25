@@ -1,5 +1,18 @@
 {
-  "posted_at": "2026-05-25T20:43:49Z",
+  "attempts": [
+    {
+      "attempt": 1,
+      "command_id": 13,
+      "posted_at": "2026-05-25T20:43:49Z",
+      "outcome": "error_kind=not_connected ('No live BLE link to ELM327; pair the adapter first'); ack in 120ms. Owner re-paired adapter."
+    },
+    {
+      "attempt": 2,
+      "command_id": 14,
+      "posted_at": "2026-05-25T20:48:58Z",
+      "outcome": "ack=ok in 8s, started=true; sweep_run id=2 ended cleanly 27 sec later, 255 probes / 16 valid responses (vs VCU 255/255 in Cycle 1)."
+    }
+  ],
   "request": {
     "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
     "kind": "bleStartSweep",
@@ -14,8 +27,8 @@
     },
     "timeout_ms": 120000
   },
-  "response": {
-    "id": 13,
+  "final_response": {
+    "id": 14,
     "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
     "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
     "kind": "bleStartSweep",
@@ -28,16 +41,18 @@
       "period_ms": 250,
       "start_did": "0001"
     },
-    "status": "error",
+    "status": "ok",
     "created_by": "admin",
-    "created_at": "2026-05-25T20:43:49.700169Z",
-    "dispatched_at": "2026-05-25T20:43:50.703494Z",
-    "finished_at": "2026-05-25T20:43:50.823478Z",
-    "result": null,
-    "error": "No live BLE link to ELM327; pair the adapter first",
-    "error_kind": "not_connected",
+    "created_at": "2026-05-25T20:48:58.290733Z",
+    "dispatched_at": "2026-05-25T20:48:59.220734Z",
+    "finished_at": "2026-05-25T20:48:59.269191Z",
+    "result": {
+      "kind": "sweep",
+      "started": true
+    },
+    "error": null,
+    "error_kind": null,
     "timeout_ms": 120000,
-    "expires_at": "2026-05-25T20:50:49.700169Z"
-  },
-  "outcome": "cmd 13 ack=error in 120 ms after dispatch. error='No live BLE link to ELM327; pair the adapter first'. error_kind='not_connected'. No sweep started, no sweep_runs row ingested. Operational issue (BLE pair to OBD adapter is down), NOT a client bug — client cleanly reports the precondition failure."
+    "expires_at": "2026-05-25T20:55:58.290733Z"
+  }
 }
