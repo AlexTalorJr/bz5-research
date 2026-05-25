@@ -26,7 +26,7 @@ All CAN tx/rx pairs encountered, with role hypothesis and exploration status.
 | 782 | 78A | OBC (on-board charger) | listed in registry, DIDs TBD |
 | 786 | 78E | Aux #4 | not explored — HVAC candidate |
 | 790 | 798 | BMS master | confirmed, heavily explored |
-| 791 | 799 | VCU | confirmed, partially explored |
+| 791 | 799 | VCU | partially explored — cycle 001 swept 0x0001-0x00FF (51/255 DIDs with payload); cycle 002 planned for state-differential |
 | 7E5 | 7ED | OBD compliance (UDS standard) | not explored — generic OBD2 PIDs only |
 | 7F1 | 7F9 | Gateway #2 | not explored |
 

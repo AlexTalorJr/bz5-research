@@ -28,8 +28,30 @@ Each row entry: `ECU/DID — name — unit — scale/offset — confirmed-in`.
 
 ## VCU (791/799)
 
-- `791/0026` — Odometer — km — baseline
-- `791/0038` — Power-A — kW magnitude (unsigned) — baseline
+- `791/0026` — Odometer — km — baseline (re-confirmed in cycle 001 as `000070CD` = 28877; scale TBD — likely 1 km giving 28877 km, but could be 0.1 km giving 2887.7 km)
+- `791/0038` — Power-A — kW magnitude (unsigned) — baseline (re-confirmed in cycle 001 as `0326` = 806 in idle Ready, unit TBD — likely W)
+
+### VCU low-byte landscape (cycle 001 observations, semantics TBD)
+
+Cycle 001 swept 0x0001-0x00FF on VCU. Results stored in
+`cycles/001-vcu-low-scan/`. Summary:
+
+- 255 of 255 DIDs returned positive UDS response (no NRC)
+- **204 DIDs returned `62 XX XX` with zero payload** — unusual; not
+  proof of DID existence in the operational sense
+- 51 DIDs returned non-zero payload, broken down by width:
+  - 1 byte: 26 DIDs (mostly flags/enums)
+  - 2 byte: 13 DIDs (counters, small values, including 0038/0039)
+  - 4 byte: 10 DIDs (counters, odometer at 0026, non-zero pair at 004A/004B)
+  - 7 byte: 1 DID (0056, all zero in idle)
+  - 10 byte: 1 DID (0049, structured FF-pattern)
+
+DIDs flagged for follow-up in cycle 002 differential sweep:
+- `0x0038/0x0039` — adjacent 2-byte pair, ratio ≈ 2× in idle
+- `0x0043/0x0044/0x0045` — three 1-byte values 40/27/27 — plausibly temperatures °C
+- `0x004A/0x004B` — 4-byte non-zero, dynamic candidates
+- `0x0046/0x0047/0x0048/0x004C/0x004D/0x004E` — 4-byte zero in idle, could mask pack-current-near-zero
+- `0x0025/0x0036/0x0037/0x0040/0x0041/0x0042` — 2-byte zero in idle, similar candidates
 
 ## PDU / HV Junction (740/748)
 
