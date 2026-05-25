@@ -1,0 +1,46 @@
+{
+  "posted_at": "2026-05-25T21:20:04Z",
+  "request": {
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "kind": "bleStartSweep",
+    "args": {
+      "tx_ecu": "713",
+      "rx_ecu": "71B",
+      "start_did": "0001",
+      "end_did": "00FF",
+      "period_ms": 250,
+      "car_state": "parked_ready_off_climate_off",
+      "notes": "Cycle 9 — Motor controller 1 first probe; unexplored ECU per ecu_map"
+    },
+    "timeout_ms": 120000
+  },
+  "response": {
+    "id": 18,
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
+    "kind": "bleStartSweep",
+    "args": {
+      "notes": "Cycle 9 — Motor controller 1 first probe; unexplored ECU per ecu_map",
+      "rx_ecu": "71B",
+      "tx_ecu": "713",
+      "end_did": "00FF",
+      "car_state": "parked_ready_off_climate_off",
+      "period_ms": 250,
+      "start_did": "0001"
+    },
+    "status": "ok",
+    "created_by": "admin",
+    "created_at": "2026-05-25T21:20:04.597210Z",
+    "dispatched_at": "2026-05-25T21:20:05.203693Z",
+    "finished_at": "2026-05-25T21:20:05.289551Z",
+    "result": {
+      "kind": "sweep",
+      "started": true
+    },
+    "error": null,
+    "error_kind": null,
+    "timeout_ms": 120000,
+    "expires_at": "2026-05-25T21:27:04.597210Z"
+  },
+  "outcome": "ack=ok in 11s. sweep_run id=5 created at 21:20:05Z but NEVER closed (ended_at remains NULL). total_probes=255 (preallocated value), valid_responses=0. sweep_results has only 77 rows (not 255), ALL with error_code='7F2201' (UDS NRC $01 GeneralReject). After the partial batch, client pipeline went silent — same pattern as Cycle 2 live-log freeze, but happening to a sweep this time."
+}
