@@ -1,0 +1,31 @@
+{
+  "posted_at": "2026-05-25T20:19:05Z",
+  "request": {
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "kind": "bleStopActiveOperation",
+    "args": {},
+    "timeout_ms": 30000
+  },
+  "response": {
+    "id": 12,
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
+    "kind": "bleStopActiveOperation",
+    "args": {},
+    "status": "ok",
+    "created_by": "admin",
+    "created_at": "2026-05-25T20:19:05.757215Z",
+    "dispatched_at": "2026-05-25T20:19:06.073988Z",
+    "finished_at": "2026-05-25T20:19:06.100094Z",
+    "result": {
+      "stopped": [
+        "livelog"
+      ]
+    },
+    "error": null,
+    "error_kind": null,
+    "timeout_ms": 30000,
+    "expires_at": "2026-05-25T20:24:35.757215Z"
+  },
+  "outcome": "cmd 12 ack=ok in 11s. session closed clean: ended_at set, notes '| exit=cancelled', cycle_count=43, entry_count=301. +22 still verified."
+}
