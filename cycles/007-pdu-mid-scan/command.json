@@ -1,0 +1,58 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "command_id": 15,
+      "posted_at": "2026-05-25T20:57:13Z",
+      "outcome": "timeout after 7 min. Client app was inactive (no /v1/commands/next requests, no heartbeats) from ~20:50Z to ~21:08Z. Owner re-opened app and retried."
+    },
+    {
+      "attempt": 2,
+      "command_id": 16,
+      "posted_at": "2026-05-25T21:08:14Z",
+      "outcome": "ack=ok in 13s; sweep_run id=3 ended 27s later. 256/256 probed, 1 valid, 255 NRC 7F2231."
+    }
+  ],
+  "request": {
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "kind": "bleStartSweep",
+    "args": {
+      "tx_ecu": "740",
+      "rx_ecu": "748",
+      "start_did": "0100",
+      "end_did": "01FF",
+      "period_ms": 250,
+      "car_state": "parked_ready_off_climate_off",
+      "notes": "Cycle 7 — PDU mid-byte scan extension; looking for pack current cluster after 0024"
+    },
+    "timeout_ms": 120000
+  },
+  "final_response": {
+    "id": 16,
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
+    "kind": "bleStartSweep",
+    "args": {
+      "notes": "Cycle 7 — PDU mid-byte scan extension; looking for pack current cluster after 0024",
+      "rx_ecu": "748",
+      "tx_ecu": "740",
+      "end_did": "01FF",
+      "car_state": "parked_ready_off_climate_off",
+      "period_ms": 250,
+      "start_did": "0100"
+    },
+    "status": "ok",
+    "created_by": "admin",
+    "created_at": "2026-05-25T21:08:14.273257Z",
+    "dispatched_at": "2026-05-25T21:08:14.588280Z",
+    "finished_at": "2026-05-25T21:08:14.742321Z",
+    "result": {
+      "kind": "sweep",
+      "started": true
+    },
+    "error": null,
+    "error_kind": null,
+    "timeout_ms": 120000,
+    "expires_at": "2026-05-25T21:15:14.273257Z"
+  }
+}
