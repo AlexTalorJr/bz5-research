@@ -1,0 +1,148 @@
+{
+  "attempt": 1,
+  "outcome": "client-side OK, ingest blocked by UNIQUE(device_id, client_session_id) collision with Cycle 2 session row id=1. Client +21 reused client_session_id=1. Bridge accepted batch (200) but on_conflict_do_nothing skipped it; entries block also skipped. Resolved by DELETE FROM live_log_sessions WHERE id=1 (Cycle 2 row, data already preserved in git as cycles/002-vcu-drive-livelog/raw/). Then attempt 2 issued.",
+  "start": {
+    "command_id": 5,
+    "posted_at": "2026-05-25T17:40:16Z",
+    "request": {
+      "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+      "kind": "bleStartLiveLog",
+      "args": {
+        "did_list": [
+          {
+            "tx_ecu": "791",
+            "rx_ecu": "799",
+            "did": "0038"
+          },
+          {
+            "tx_ecu": "791",
+            "rx_ecu": "799",
+            "did": "0039"
+          },
+          {
+            "tx_ecu": "791",
+            "rx_ecu": "799",
+            "did": "004A"
+          },
+          {
+            "tx_ecu": "791",
+            "rx_ecu": "799",
+            "did": "004B"
+          },
+          {
+            "tx_ecu": "791",
+            "rx_ecu": "799",
+            "did": "0046"
+          },
+          {
+            "tx_ecu": "791",
+            "rx_ecu": "799",
+            "did": "004C"
+          },
+          {
+            "tx_ecu": "791",
+            "rx_ecu": "799",
+            "did": "000A"
+          }
+        ],
+        "duration_sec": 600,
+        "car_state": "parked_1min_then_drive_3_4min",
+        "notes": "Cycle 3 short — verify +21 watchdog/finally on parked→driving transition"
+      },
+      "timeout_ms": 120000
+    },
+    "final": {
+      "id": 5,
+      "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+      "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
+      "kind": "bleStartLiveLog",
+      "args": {
+        "notes": "Cycle 3 short — verify +21 watchdog/finally on parked→driving transition",
+        "did_list": [
+          {
+            "did": "0038",
+            "rx_ecu": "799",
+            "tx_ecu": "791"
+          },
+          {
+            "did": "0039",
+            "rx_ecu": "799",
+            "tx_ecu": "791"
+          },
+          {
+            "did": "004A",
+            "rx_ecu": "799",
+            "tx_ecu": "791"
+          },
+          {
+            "did": "004B",
+            "rx_ecu": "799",
+            "tx_ecu": "791"
+          },
+          {
+            "did": "0046",
+            "rx_ecu": "799",
+            "tx_ecu": "791"
+          },
+          {
+            "did": "004C",
+            "rx_ecu": "799",
+            "tx_ecu": "791"
+          },
+          {
+            "did": "000A",
+            "rx_ecu": "799",
+            "tx_ecu": "791"
+          }
+        ],
+        "car_state": "parked_1min_then_drive_3_4min",
+        "duration_sec": 600
+      },
+      "status": "ok",
+      "created_by": "admin",
+      "created_at": "2026-05-25T17:40:16.641298Z",
+      "dispatched_at": "2026-05-25T17:40:16.758542Z",
+      "finished_at": "2026-05-25T17:40:16.781291Z",
+      "result": {
+        "kind": "livelog",
+        "started": true
+      },
+      "error": null,
+      "error_kind": null,
+      "timeout_ms": 120000,
+      "expires_at": "2026-05-25T17:47:16.641298Z"
+    }
+  },
+  "stop": {
+    "command_id": 6,
+    "posted_at": "2026-05-25T17:48:11Z",
+    "request": {
+      "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+      "kind": "bleStopActiveOperation",
+      "args": {},
+      "timeout_ms": 30000
+    },
+    "final": {
+      "id": 6,
+      "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+      "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
+      "kind": "bleStopActiveOperation",
+      "args": {},
+      "status": "ok",
+      "created_by": "admin",
+      "created_at": "2026-05-25T17:48:11.857707Z",
+      "dispatched_at": "2026-05-25T17:48:12.296579Z",
+      "finished_at": "2026-05-25T17:48:12.557716Z",
+      "result": {
+        "stopped": [
+          "livelog"
+        ]
+      },
+      "error": null,
+      "error_kind": null,
+      "timeout_ms": 30000,
+      "expires_at": "2026-05-25T17:53:41.857707Z"
+    },
+    "positive_signal": "cmd6 reached status=ok in 7 seconds (client returned result), in contrast to Cycle 2 cmd 4 which sat in 'dispatched' for 6 min until sweeper marked timeout. This is the first concrete evidence the +21 watchdog/finally cleanly handles bleStopActiveOperation."
+  }
+}
