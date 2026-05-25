@@ -1,0 +1,27 @@
+{
+  "posted_at": "2026-05-25T16:34:49Z",
+  "request": {
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "kind": "bleStopActiveOperation",
+    "args": {},
+    "timeout_ms": 30000
+  },
+  "response": {
+    "id": 4,
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
+    "kind": "bleStopActiveOperation",
+    "args": {},
+    "status": "timeout",
+    "created_by": "admin",
+    "created_at": "2026-05-25T16:34:50.064542Z",
+    "dispatched_at": "2026-05-25T16:34:50.833103Z",
+    "finished_at": "2026-05-25T16:40:40.944837Z",
+    "result": null,
+    "error": null,
+    "error_kind": null,
+    "timeout_ms": 30000,
+    "expires_at": "2026-05-25T16:40:20.064542Z"
+  },
+  "outcome": "client never responded; sweeper marked status=timeout at 16:40:44Z after 30s timeout_ms + 5min grace. No POST /v1/commands/4/result was made by client. App stayed alive throughout (heartbeats every 60s on token bf9d006d continued)."
+}

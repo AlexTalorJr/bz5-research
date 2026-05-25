@@ -1,0 +1,2 @@
+id,device_id,vehicle_id,client_session_id,started_at,ended_at,did_list,car_state,notes,cycle_count,entry_count,received_at
+1,26305a60-09ec-4c6d-9627-a295141d5ea3,842665c4-a20b-4c6f-bc9c-ece32bf58cc8,1,2026-05-25 16:02:48+00,,"791/0038,791/0039,791/004A,791/004B,791/0046,791/004C,791/000A",,started via bridge command,0,0,2026-05-25 16:03:09.100968+00
