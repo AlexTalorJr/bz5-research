@@ -1,5 +1,5 @@
 {
-  "posted_at": "2026-05-25T16:02:42Z",
+  "posted_at": "2026-05-25T16:01:18Z",
   "request": {
     "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
     "kind": "bleStartLiveLog",
@@ -41,19 +41,18 @@
           "did": "000A"
         }
       ],
-      "duration_sec": 2400,
       "car_state": "real_drive_~30min",
-      "notes": "Cycle 2 — live log VCU 7 DIDs during real drive (retry; v1 failed: duration_sec missing)"
+      "notes": "Cycle 2 — live log VCU 7 DIDs during real drive for pack-current/regen identification"
     },
     "timeout_ms": 600000
   },
   "response": {
-    "id": 3,
+    "id": 2,
     "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
     "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
     "kind": "bleStartLiveLog",
     "args": {
-      "notes": "Cycle 2 — live log VCU 7 DIDs during real drive (retry; v1 failed: duration_sec missing)",
+      "notes": "Cycle 2 — live log VCU 7 DIDs during real drive for pack-current/regen identification",
       "did_list": [
         {
           "did": "0038",
@@ -91,18 +90,18 @@
           "tx_ecu": "791"
         }
       ],
-      "car_state": "real_drive_~30min",
-      "duration_sec": 2400
+      "car_state": "real_drive_~30min"
     },
-    "status": "pending",
+    "status": "error",
     "created_by": "admin",
-    "created_at": "2026-05-25T16:02:43.053502Z",
-    "dispatched_at": null,
-    "finished_at": null,
+    "created_at": "2026-05-25T16:01:18.777030Z",
+    "dispatched_at": "2026-05-25T16:01:19.646031Z",
+    "finished_at": "2026-05-25T16:01:19.707257Z",
     "result": null,
-    "error": null,
-    "error_kind": null,
+    "error": "duration_sec missing or not numeric",
+    "error_kind": "parse",
     "timeout_ms": 600000,
-    "expires_at": "2026-05-25T16:17:43.053502Z"
-  }
+    "expires_at": "2026-05-25T16:16:18.777030Z"
+  },
+  "outcome": "parse error: 'duration_sec missing or not numeric' — bleStartLiveLog client validator requires duration_sec in args (CLIENT_API.md and hypothesis missed this). Re-issued as command id=3 with duration_sec=2400."
 }
