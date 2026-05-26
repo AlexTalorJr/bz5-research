@@ -1,0 +1,69 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://carbridge.neardo.work/v1/admin/commands",
+    "body": {
+      "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+      "kind": "bleStartLiveLog",
+      "args": {
+        "did_list": [
+          {"tx_ecu": "791", "rx_ecu": "799", "did": "0038"},
+          {"tx_ecu": "791", "rx_ecu": "799", "did": "0039"},
+          {"tx_ecu": "791", "rx_ecu": "799", "did": "0026"},
+          {"tx_ecu": "740", "rx_ecu": "748", "did": "0008"},
+          {"tx_ecu": "740", "rx_ecu": "748", "did": "0009"},
+          {"tx_ecu": "790", "rx_ecu": "798", "did": "0015"},
+          {"tx_ecu": "790", "rx_ecu": "798", "did": "002B"},
+          {"tx_ecu": "790", "rx_ecu": "798", "did": "002D"},
+          {"tx_ecu": "790", "rx_ecu": "798", "did": "0030"},
+          {"tx_ecu": "790", "rx_ecu": "798", "did": "0032"}
+        ],
+        "duration_sec": 1800,
+        "car_state": "drive_mixed_3_ecu_hunt",
+        "notes": "Cycle 12 — first 10-DID session (after +25); 3-ECU hunt: VCU/PDU/BMS, pack current candidates 740/0009 790/0015 790/0030 790/0032"
+      },
+      "timeout_ms": 120000
+    }
+  },
+  "response": {
+    "id": 24,
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
+    "kind": "bleStartLiveLog",
+    "args": {
+      "notes": "Cycle 12 — first 10-DID session (after +25); 3-ECU hunt: VCU/PDU/BMS, pack current candidates 740/0009 790/0015 790/0030 790/0032",
+      "did_list": [
+        {"did": "0038", "rx_ecu": "799", "tx_ecu": "791"},
+        {"did": "0039", "rx_ecu": "799", "tx_ecu": "791"},
+        {"did": "0026", "rx_ecu": "799", "tx_ecu": "791"},
+        {"did": "0008", "rx_ecu": "748", "tx_ecu": "740"},
+        {"did": "0009", "rx_ecu": "748", "tx_ecu": "740"},
+        {"did": "0015", "rx_ecu": "798", "tx_ecu": "790"},
+        {"did": "002B", "rx_ecu": "798", "tx_ecu": "790"},
+        {"did": "002D", "rx_ecu": "798", "tx_ecu": "790"},
+        {"did": "0030", "rx_ecu": "798", "tx_ecu": "790"},
+        {"did": "0032", "rx_ecu": "798", "tx_ecu": "790"}
+      ],
+      "car_state": "drive_mixed_3_ecu_hunt",
+      "duration_sec": 1800
+    },
+    "status": "pending",
+    "created_by": "admin",
+    "created_at": "2026-05-26T15:49:05.951291Z",
+    "dispatched_at": null,
+    "finished_at": null,
+    "result": null,
+    "error": null,
+    "error_kind": null,
+    "timeout_ms": 120000,
+    "expires_at": "2026-05-26T15:56:05.951291Z"
+  },
+  "preflight": {
+    "device_last_client_version": "0.1.29+24",
+    "device_last_heartbeat_at": "2026-05-26T05:59:13.818202Z",
+    "deleted_stale_live_log_sessions": [
+      {"id": 7, "client_session_id": 2, "entry_count": 3528, "note": "Cycle 11 row; raw CSV already archived in cycles/011-pdu-0023-repeat/raw/"}
+    ],
+    "client_version_discrepancy": "Notes claim 'after +25' but bridge sees +24 at heartbeat 05:59:13Z. If owner just updated the APK, the next BridgeDiagService start will heartbeat with +25; verify on stop."
+  }
+}
