@@ -1,0 +1,14 @@
+{
+  "car_state": null,
+  "client_session_id": 2,
+  "cycle_count": 271,
+  "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+  "did_list": "791/0026,791/0038,790/0015,740/0008,790/002B,790/002D",
+  "ended_at": "2026-05-26T16:42:09+00:00",
+  "entry_count": 1625,
+  "id": 9,
+  "notes": "started via bridge command | exit=cancelled",
+  "received_at": "2026-05-26T16:42:48.636612+00:00",
+  "started_at": "2026-05-26T16:35:11+00:00",
+  "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8"
+}
