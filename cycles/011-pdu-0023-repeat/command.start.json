@@ -1,0 +1,108 @@
+{
+  "posted_at": "2026-05-26T05:21:48Z",
+  "request": {
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "kind": "bleStartLiveLog",
+    "args": {
+      "did_list": [
+        {
+          "tx_ecu": "740",
+          "rx_ecu": "748",
+          "did": "0023"
+        },
+        {
+          "tx_ecu": "791",
+          "rx_ecu": "799",
+          "did": "0038"
+        },
+        {
+          "tx_ecu": "791",
+          "rx_ecu": "799",
+          "did": "0039"
+        },
+        {
+          "tx_ecu": "791",
+          "rx_ecu": "799",
+          "did": "0026"
+        },
+        {
+          "tx_ecu": "740",
+          "rx_ecu": "748",
+          "did": "0008"
+        },
+        {
+          "tx_ecu": "740",
+          "rx_ecu": "748",
+          "did": "0009"
+        },
+        {
+          "tx_ecu": "740",
+          "rx_ecu": "748",
+          "did": "0014"
+        }
+      ],
+      "duration_sec": 1800,
+      "car_state": "drive_25min_pack_current_verification",
+      "notes": "Cycle 11 — repeat of Cycle 10 with same 7 DIDs; second sample of PDU 0x0023 bipolar swing"
+    },
+    "timeout_ms": 120000
+  },
+  "response": {
+    "id": 22,
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8",
+    "kind": "bleStartLiveLog",
+    "args": {
+      "notes": "Cycle 11 — repeat of Cycle 10 with same 7 DIDs; second sample of PDU 0x0023 bipolar swing",
+      "did_list": [
+        {
+          "did": "0023",
+          "rx_ecu": "748",
+          "tx_ecu": "740"
+        },
+        {
+          "did": "0038",
+          "rx_ecu": "799",
+          "tx_ecu": "791"
+        },
+        {
+          "did": "0039",
+          "rx_ecu": "799",
+          "tx_ecu": "791"
+        },
+        {
+          "did": "0026",
+          "rx_ecu": "799",
+          "tx_ecu": "791"
+        },
+        {
+          "did": "0008",
+          "rx_ecu": "748",
+          "tx_ecu": "740"
+        },
+        {
+          "did": "0009",
+          "rx_ecu": "748",
+          "tx_ecu": "740"
+        },
+        {
+          "did": "0014",
+          "rx_ecu": "748",
+          "tx_ecu": "740"
+        }
+      ],
+      "car_state": "drive_25min_pack_current_verification",
+      "duration_sec": 1800
+    },
+    "status": "pending",
+    "created_by": "admin",
+    "created_at": "2026-05-26T05:21:48.926232Z",
+    "dispatched_at": null,
+    "finished_at": null,
+    "result": null,
+    "error": null,
+    "error_kind": null,
+    "timeout_ms": 120000,
+    "expires_at": "2026-05-26T05:28:48.926232Z"
+  }
+}
