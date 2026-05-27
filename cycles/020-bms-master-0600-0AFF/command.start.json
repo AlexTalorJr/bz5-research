@@ -1,0 +1,28 @@
+{
+  "args": {
+    "car_state": "parked_ready_off",
+    "end_did": "0AFF",
+    "notes": "Cycle 20 \u2014 BMS master 0600-0AFF",
+    "period_ms": 250,
+    "rx_ecu": "798",
+    "start_did": "0600",
+    "tx_ecu": "790"
+  },
+  "created_at": "2026-05-27T19:15:29.096784Z",
+  "created_by": "admin",
+  "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+  "dispatched_at": "2026-05-27T19:15:29.291675Z",
+  "error": null,
+  "error_kind": null,
+  "expires_at": "2026-05-27T19:30:29.096784Z",
+  "finished_at": "2026-05-27T19:15:28.213385Z",
+  "id": 46,
+  "kind": "bleStartSweep",
+  "result": {
+    "kind": "sweep",
+    "started": true
+  },
+  "status": "ok",
+  "timeout_ms": 600000,
+  "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8"
+}
