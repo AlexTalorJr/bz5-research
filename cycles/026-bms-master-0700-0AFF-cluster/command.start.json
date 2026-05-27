@@ -1,0 +1,28 @@
+{
+  "args": {
+    "car_state": "parked_ready_off",
+    "end_did": "0AFF",
+    "notes": "Cycle 26 \u2014 BMS 0700-0AFF; expand C20 finding to find full cluster",
+    "period_ms": 250,
+    "rx_ecu": "798",
+    "start_did": "0700",
+    "tx_ecu": "790"
+  },
+  "created_at": "2026-05-27T20:24:39.876451Z",
+  "created_by": "admin",
+  "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+  "dispatched_at": "2026-05-27T20:24:40.376107Z",
+  "error": null,
+  "error_kind": null,
+  "expires_at": "2026-05-27T20:39:39.876451Z",
+  "finished_at": "2026-05-27T20:24:39.088130Z",
+  "id": 58,
+  "kind": "bleStartSweep",
+  "result": {
+    "kind": "sweep",
+    "started": true
+  },
+  "status": "ok",
+  "timeout_ms": 600000,
+  "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8"
+}
