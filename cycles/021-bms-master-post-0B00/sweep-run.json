@@ -1,0 +1,18 @@
+{
+  "car_state": null,
+  "client_sweep_id": 9,
+  "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+  "end_did": "0FFF",
+  "ended_at": null,
+  "id": 15,
+  "notes": "started via bridge command",
+  "period_ms": 250,
+  "received_at": "2026-05-27T19:18:23.643839+00:00",
+  "rx_ecu": "798",
+  "start_did": "0C00",
+  "started_at": "2026-05-27T19:17:24+00:00",
+  "total_probes": 1024,
+  "tx_ecu": "790",
+  "valid_responses": 0,
+  "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8"
+}
