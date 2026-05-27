@@ -1,0 +1,28 @@
+{
+  "args": {
+    "car_state": "parked_ready_off",
+    "end_did": "00FF",
+    "notes": "Cycle 13 \u2014 BMS slave 750 first probe; pack current shunt monitor candidate",
+    "period_ms": 250,
+    "rx_ecu": "758",
+    "start_did": "0001",
+    "tx_ecu": "750"
+  },
+  "created_at": "2026-05-27T16:33:32.715174Z",
+  "created_by": "admin",
+  "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+  "dispatched_at": "2026-05-27T16:33:33.367242Z",
+  "error": null,
+  "error_kind": null,
+  "expires_at": "2026-05-27T16:40:32.715174Z",
+  "finished_at": "2026-05-27T16:33:32.076392Z",
+  "id": 30,
+  "kind": "bleStartSweep",
+  "result": {
+    "kind": "sweep",
+    "started": true
+  },
+  "status": "ok",
+  "timeout_ms": 120000,
+  "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8"
+}
