@@ -1,0 +1,2 @@
+id,client_session_id,started_at,ended_at,duration_sec,car_state,notes,protocol,frame_count,unique_can_ids,received_at
+9,7,2026-05-29 18:42:00+00,2026-05-29 18:42:21+00,30,parked_ready_on,"C30 620 retest — SP6 no filter, replica of C28 Phase A | exit=no_frames_15s",6,0,0,2026-05-29 18:43:20.501866+00
