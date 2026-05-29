@@ -1,0 +1,2 @@
+id,client_session_id,started_at,ended_at,duration_sec,car_state,notes,protocol,frame_count,unique_can_ids,received_at
+6,4,2026-05-29 18:26:42+00,2026-05-29 18:26:58+00,15,parked_ready_on,C29 P3 SP8 11bit250k + filter clear | exit=completed,8,0,0,2026-05-29 18:27:20.498694+00
