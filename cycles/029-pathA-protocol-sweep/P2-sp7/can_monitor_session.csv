@@ -1,0 +1,2 @@
+id,client_session_id,started_at,ended_at,duration_sec,car_state,notes,protocol,frame_count,unique_can_ids,received_at
+5,3,2026-05-29 18:25:43+00,2026-05-29 18:25:58+00,15,parked_ready_on,C29 P2 SP7 29bit500k + filter clear | exit=completed,7,0,0,2026-05-29 18:26:20.621652+00
