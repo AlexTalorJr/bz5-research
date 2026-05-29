@@ -1,0 +1,30 @@
+{
+  "args": {
+    "car_state": "parked_ready_on",
+    "duration_sec": 15,
+    "filter_commands": [
+      "AT CAF0",
+      "AT CM 000",
+      "AT CF 000"
+    ],
+    "notes": "C29 P4 SP9 29bit250k + filter clear",
+    "protocol": "9"
+  },
+  "created_at": "2026-05-29T18:27:44.085336Z",
+  "created_by": "admin",
+  "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+  "dispatched_at": "2026-05-29T18:27:45.072728Z",
+  "error": null,
+  "error_kind": null,
+  "expires_at": "2026-05-29T18:33:14.085336Z",
+  "finished_at": "2026-05-29T18:27:45.299636Z",
+  "id": 82,
+  "kind": "bleStartCanMonitor",
+  "result": {
+    "kind": "canmonitor",
+    "started": true
+  },
+  "status": "ok",
+  "timeout_ms": 30000,
+  "vehicle_id": "842665c4-a20b-4c6f-bc9c-ece32bf58cc8"
+}
