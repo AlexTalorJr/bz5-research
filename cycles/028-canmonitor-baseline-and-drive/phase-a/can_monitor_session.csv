@@ -1,0 +1,2 @@
+id,client_session_id,started_at,ended_at,duration_sec,car_state,notes,frame_count,unique_can_ids,received_at
+2,2,2026-05-29 15:34:06+00,2026-05-29 15:34:37+00,30,parked_ready_on,Cycle 28 phase A — gateway openness test | exit=completed,20,2,2026-05-29 15:35:11.03965+00
