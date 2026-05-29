@@ -1,0 +1,2 @@
+id,client_session_id,started_at,ended_at,did_list,car_state,notes,cycle_count,entry_count,received_at
+10,1,2026-05-29 15:39:24+00,2026-05-29 16:04:28+00,"790/0608,790/060B,790/060F,790/0700,790/0708,790/070F,790/0015,791/0026,740/0008,791/0038",,started via bridge command | exit=cancelled,290,2898,2026-05-29 16:05:11.665793+00
