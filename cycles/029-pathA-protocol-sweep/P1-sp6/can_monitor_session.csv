@@ -1,0 +1,2 @@
+id,client_session_id,started_at,ended_at,duration_sec,car_state,notes,protocol,frame_count,unique_can_ids,received_at
+3,1,2026-05-29 18:19:06+00,2026-05-29 18:19:21+00,15,parked_ready_on,C29 P1 SP6 + chip probe + filter clear | exit=completed,6,0,0,2026-05-29 18:19:21.404932+00
