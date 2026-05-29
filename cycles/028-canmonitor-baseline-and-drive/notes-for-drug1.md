@@ -139,6 +139,59 @@ If correct, **the workaround `bleStopActiveOperation` + sleep is insufficient be
 
 ---
 
+---
+
+## Phase B retry (after owner reconnected BLE adapter) — HYPOTHESIS CONFIRMED
+
+To test the ELM327-stuck-in-monitor-mode hypothesis, owner physically reconnected the BLE adapter and we re-ran the same Phase B payload **without** running canmonitor before it.
+
+```
+cmd 68 bleStartLiveLog duration_sec=1800, same 10-DID list as Phase B
+session id=11, client_session_id=2 (BridgeDiagService persistent counter)
+duration: 16:14:01Z → 16:24:15Z = 10m14s
+notes: "started via bridge command | exit=cancelled"
+entry_count=1236, cycle_count=124   →  ~4.94 s/cycle (~half of broken Phase B's 8.6 s)
+```
+
+### Result: 1219 valid / 1236 entries (98.6%) — vs Phase B's 0/2898
+
+| DID | valid (uniq) | err | Comment |
+|---|---|---|---|
+| 740/0008 | 123 (102) | 0 | **Varies under drive** — was constant `0000` in C20 static sweep |
+| 790/0015 | 110 (53) | **13 SANITY:NA** | varies — pack-current candidate; **new error type `SANITY:NA`** |
+| 790/0608 | 124 (1) | 0 | constant `00` payload |
+| 790/060B | 124 (1) | 0 | constant `00` |
+| 790/060F | 124 (1) | 0 | constant `00` |
+| 790/0700 | 124 (1) | 0 | constant `00` |
+| 790/0708 | 124 (1) | 0 | constant `00` |
+| 790/070F | 124 (1) | 0 | constant `00` |
+| 791/0026 | 123 (80) | 0 | odo, ticks during drive |
+| 791/0038 | 123 (94) | 0 | power-A reference, varies as expected |
+
+### Implications
+
+1. **Hypothesis confirmed**: ELM327 BLE adapter retained `AT MA` state after Phase A. `bleStopActiveOperation` + 30 s pause was NOT enough to reset it. **Only a fresh BLE adapter reconnect** cleared the state. Phase B retry, with no canmonitor before it, parsed UDS responses normally.
+2. **C20 zero-byte cluster is DEAD under drive too.** 6 of the 8+16 DIDs from the cluster (`0x0608, 060B, 060F, 0700, 0708, 070F`) stayed at constant `0x00` payload across 124 cycles of mixed driving. They are not pack-current candidates and not any motion-correlated signal. Drop from the candidate list.
+3. **`740/0008` is a new candidate.** It was `6200080000` (zero) in static C20 sweep, but during drive showed **102 unique values** out of 123 — clearly varies with vehicle state.
+4. **`790/0015` confirmed as a real varying signal.** 53 uniques in `0x4232..0x4367` range — pack-current candidate behaves like a moving value. Plus 13 rows showed a new client-side error code **`SANITY:NA`** (cf. earlier `SANITY:PAIR:-N` on `002B`/`002D` from C12b). Some inter-DID sanity check is occasionally failing on `790/0015`. Worth understanding what `SANITY:NA` means in the client codebase.
+
+### Pipeline lesson for future cycles
+
+**Between a canmonitor session and a subsequent UDS-based operation (livelog, sweep, dtc-scan), the BLE adapter must be reconnected, not just stopped.** `bleStopActiveOperation` + sleep does not reset `AT MA` state on the ELM327 firmware path used by `+30`. Possible mitigations on the client:
+- Send `AT MA` exit explicitly (e.g., any non-monitor command like `AT D`)
+- Force `ATZ` soft-reset after canmonitor
+- Reopen GATT session as part of `bleStopActiveOperation` when transitioning out of monitor
+
+Until any of these land, the operator workflow needs: `canmonitor → manual BLE reconnect → next op`.
+
+### Phase B retry artifacts
+
+- Session row: https://github.com/AlexTalorJr/bz5-research/blob/main/cycles/028-canmonitor-baseline-and-drive/phase-b-retry/live_log_session.csv
+- Entries (1236 rows): https://github.com/AlexTalorJr/bz5-research/blob/main/cycles/028-canmonitor-baseline-and-drive/phase-b-retry/live_log_entries.csv
+- Commit: `cad7006`
+
+---
+
 ## Bridge pipeline verification (full session, all phases)
 
 Across smoke + Phase A + Phase B the bridge side did exactly what your `c73f0fb`-shipped contract promised:
