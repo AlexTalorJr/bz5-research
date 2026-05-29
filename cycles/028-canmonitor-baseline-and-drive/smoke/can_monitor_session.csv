@@ -1,0 +1,2 @@
+id,client_session_id,started_at,ended_at,duration_sec,car_state,notes,frame_count,unique_can_ids,received_at
+1,1,2026-05-29 15:30:46+00,2026-05-29 15:30:51+00,5,smoke_test,C28 smoke — verify ingest + idempotency path live | exit=completed,7,2,2026-05-29 15:31:11.119722+00
