@@ -1,0 +1,2 @@
+id,client_session_id,started_at,ended_at,did_list,car_state,notes,cycle_count,entry_count,received_at
+17,6,2026-05-29 20:57:26+00,2026-05-29 21:17:27+00,"790/0015,790/1FFD,790/0B00,782/000A,790/0010,791/0038,791/0039,790/0009,740/0022,740/0023",,started via bridge command | exit=max_duration,445,4450,2026-05-29 21:18:08.234352+00
