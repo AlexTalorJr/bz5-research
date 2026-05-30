@@ -1,0 +1,2 @@
+id,device_id,vehicle_id,client_session_id,started_at,ended_at,did_list,car_state,notes,cycle_count,entry_count,received_at
+18,26305a60-09ec-4c6d-9627-a295141d5ea3,842665c4-a20b-4c6f-bc9c-ece32bf58cc8,7,2026-05-30 11:47:18+00,2026-05-30 11:59:28+00,"790/0015,790/1FFD,791/0026,790/0009,790/000A,790/0006,791/0038,791/0039,740/0008,740/0022",,started via bridge command | exit=cancelled,266,2652,2026-05-30 12:00:02.763343+00
