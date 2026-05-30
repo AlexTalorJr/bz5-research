@@ -1,0 +1,27 @@
+{
+  "cycle": "C32 drive sign-check",
+  "run": 2,
+  "request": {
+    "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+    "kind": "bleStartLiveLog",
+    "args": {
+      "duration_sec": 1800,
+      "car_state": "drive_signcheck_from_100soc",
+      "notes": "C32 drive sign-check — 790/0015 sag under accel + regen; recheck weak current candidates (run 2)",
+      "did_list": [
+        {"tx_ecu":"790","rx_ecu":"798","did":"0015"},
+        {"tx_ecu":"790","rx_ecu":"798","did":"1FFD"},
+        {"tx_ecu":"791","rx_ecu":"799","did":"0026"},
+        {"tx_ecu":"790","rx_ecu":"798","did":"0009"},
+        {"tx_ecu":"790","rx_ecu":"798","did":"000A"},
+        {"tx_ecu":"790","rx_ecu":"798","did":"0006"},
+        {"tx_ecu":"791","rx_ecu":"799","did":"0038"},
+        {"tx_ecu":"791","rx_ecu":"799","did":"0039"},
+        {"tx_ecu":"740","rx_ecu":"748","did":"0008"},
+        {"tx_ecu":"740","rx_ecu":"748","did":"0022"}
+      ],
+      "timeout_ms": 60000
+    }
+  },
+  "response": {"id": 107, "status": "ok", "result": {"kind": "livelog", "started": true}}
+}
