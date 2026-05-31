@@ -1,0 +1,1 @@
+{"cycle":"C32 drive sign-check + byte-loss (canonical Drug1 directive)","run":4,"note":"timeout_ms capped 630000->600000","response":{"id":111,"status":"ok","result":{"kind":"livelog","started":true}}}

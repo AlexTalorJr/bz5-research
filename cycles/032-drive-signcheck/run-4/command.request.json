@@ -1,0 +1,22 @@
+{
+  "device_id": "26305a60-09ec-4c6d-9627-a295141d5ea3",
+  "kind": "bleStartLiveLog",
+  "args": {
+    "duration_sec": 600,
+    "car_state": "driving",
+    "notes": "C32 drive sign-check + byte-loss test (run 4, canonical Drug1 directive)",
+    "did_list": [
+      {"tx_ecu":"791","rx_ecu":"799","did":"0038"},
+      {"tx_ecu":"791","rx_ecu":"799","did":"0039"},
+      {"tx_ecu":"790","rx_ecu":"798","did":"0009"},
+      {"tx_ecu":"790","rx_ecu":"798","did":"0010"},
+      {"tx_ecu":"740","rx_ecu":"748","did":"0022"},
+      {"tx_ecu":"740","rx_ecu":"748","did":"0023"},
+      {"tx_ecu":"782","rx_ecu":"78A","did":"000A"},
+      {"tx_ecu":"790","rx_ecu":"798","did":"0015"},
+      {"tx_ecu":"790","rx_ecu":"798","did":"1FFD"},
+      {"tx_ecu":"740","rx_ecu":"748","did":"0008"}
+    ]
+  },
+  "timeout_ms": 600000
+}
