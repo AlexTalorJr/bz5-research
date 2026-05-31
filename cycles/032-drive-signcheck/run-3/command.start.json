@@ -1,0 +1,6 @@
+{
+  "cycle": "C32 drive sign-check + byte-loss (canonical Drug1 directive)",
+  "run": 3,
+  "note": "timeout_ms capped 630000->600000 (bridge schema max le=600000; gates claim window only, not the 600s livelog duration)",
+  "response": {"id": 109, "status": "ok", "result": {"kind": "livelog", "started": true}}
+}
