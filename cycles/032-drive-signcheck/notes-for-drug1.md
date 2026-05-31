@@ -113,3 +113,68 @@ All under `cycles/032-drive-signcheck/`:
 
 Entries schema: `id,session_id,timestamp,ecu_tx,did,raw_hex,error_code,cycle`.
 Decode: strip `62`+DID (6 hex chars) prefix → remaining bytes are the payload.
+
+---
+
+# C32 FINAL — canonical runs 3+4 (Drug1 directive) + combined
+
+Two more drive runs on the canonical 10-DID set (`791/0038,0039`, `790/0009,0010,0015,1FFD`,
+`740/0008,0022,0023`, `782/000A`), `duration_sec=600`, client `0.1.29+32`.
+Command-level `timeout_ms` capped 630000→600000 (bridge schema `le=600_000`; gates the
+claim window only, not the 600 s livelog). Per-run phase notes in `run-3/drive-phases.md`,
+`run-4/drive-phases.md` (run-4 = 3–5 full-throttle accel + max-regen — the high-current window).
+
+## 1. Pattern A (high-byte loss) — DEFINITIVELY ABSENT
+
+Across runs 3+4 (n≈247 per DID), **zero 1-byte samples on any current DID**, including when
+the high byte was clearly non-zero:
+
+| DID | n | 1-byte? | byte-lens | max MSB | max val |
+|-----|---|---------|-----------|---------|---------|
+| 790/0009 | 247 | **none** | {2} | **0x26** | 0x26E1 |
+| 791/0039 | 247 | **none** | {2} | 0x10 | 0x1062 |
+| 791/0038 | 247 | **none** | {2} | 0x0D | 0x0D41 |
+| 782/000A | 246 | none | {2} | 0x55 | 0x557F |
+| 740/0023 | 246 | none | {2} | 0xC6 | 0xC64F |
+| 740/0008 | 245 | none | {2} | 0x04 | 0x04D3 |
+| 790/0010 | 247 | none | {3} | — | 0x06A1 |
+| 790/0015 | 246 | none | {2}+44 empty | 0x4A | 0x4AD5 |
+
+**Conclusion:** the C31 "1-byte on charge" was just minimal-value encoding (true high byte = 0
+at ~8 A) — **not** a truncation bug. Full 16-bit value is preserved whenever the high byte is
+non-zero (verified up to MSB 0x26 on 790/0009 at full throttle). `791/0039` — the DID you
+specifically flagged — is 247/247 two-byte. **No byte-loss correction needed.**
+
+## 2. Sign
+
+- **740/0023 — real sign-bit flip, but only as a 2-state signal.** Distinct values per run:
+  run-3 `{0x46CB ×68 (positive), 0xC64F ×40 (negative-as-int16)}`; run-4 `{0x46CB ×138 only}`.
+  The sign bit *does* flip on regen (run-3), but the DID reports just two quantised levels and
+  was **frozen** for all of run-4 (along with 740/0022). PDU 740 sub-DIDs look cached/stale on
+  this client — **treat 740/0023 as corroborating sign evidence only, not a usable current.**
+- **790/0009 / 791/0038 / 791/0039 — continuous, monotonic with load, stay positive raw**
+  (offset-encoded, not two's-complement). Dynamic range over runs 3+4:
+
+  | DID | distinct | min..max (hex) | span |
+  |-----|----------|----------------|------|
+  | 790/0009 | 116 | 0x0D12 .. 0x26E1 | 6607 |
+  | 791/0039 | 63 | 0x0646 .. 0x1062 | 2588 |
+  | 791/0038 | 60 | 0x0326 .. 0x0D41 | 2587 |
+
+  790/0009's max climbed monotonically as accel got harder (run-1/2 0x1BBE → run-3 0x1ED8 →
+  run-4 full-throttle 0x26E1), and dips below its AC-charge value on regen — i.e. **signed pack
+  current via a fixed offset**, not a sign bit. Your job: fit the zero-offset + A/LSB (C31 anchor
+  ≈ 8.4–8.7 A at the AC-charge value).
+
+## 3. Primary-DID recommendation for the dashboard
+
+**790/0009 (BMS 790/798) as the primary pack-current readout:** BMS-sourced (authoritative),
+widest + smoothest dynamic range, monotonic with load, **no byte loss**, low error rate, live in
+all 4 runs. Pair with **791/0038** as the power (kW) readout and cross-check `P = V × I` using
+**790/0015** pack voltage (note: 0015 dropped ~18 % of samples to empty on drive — BLE flakiness,
+still enough for V×I). **Drop 790/0010** from drive views (3-byte, near-constant 0x069x off-charge
+— AC-side only). 740/0022 flat (not current); 782/000A is OBC/AC-side.
+
+## Raw files (runs 3+4)
+- `run-3/{command.request.json, command.start.json, drive-phases.md, raw/live_log_*.csv}`
+- `run-4/{command.request.json, command.start.json, drive-phases.md, raw/live_log_*.csv}`
