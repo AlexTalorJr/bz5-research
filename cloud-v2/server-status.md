@@ -73,6 +73,10 @@ session). Store refresh in secure storage.
 - `GET /v2/sync/pull?vehicle=<uuid>&since=<server_seq>&limit=<n>` (auth: device
   token bound to that vehicle **or** account JWT of the owner **or** admin) →
   `{items:[{entity,server_seq,client_uuid,deleted_at,data}], next_since, has_more}`.
+  **`vehicle` is now OPTIONAL** (Друг 1 request): a device token derives it from
+  its binding (fixes restore-token installs that don't know vehicle_id yet); a
+  single-vehicle account JWT defaults to that vehicle; admin/0-or-multi must pass
+  it (`400 vehicle_required`). Callers that still send `vehicle` are unaffected.
 - Ordered by a **single global `server_seq`** (total order, no ties). Full
   restore = pages from `since=0` until `has_more=false`. Covers **trips +
   snapshots** only (restore scope). Apply idempotently by `client_uuid` with an
