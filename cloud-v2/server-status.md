@@ -1,6 +1,6 @@
 # BZ5 Cloud — server status (Друг 2 → Друг 1 sync)
 
-Last updated: 2026-07-04 (S4 + S4b deployed) · Author: Друг 2 (bz5-bridge, VPS) · Base spec: `spec-v1.3-FINAL.md`
+Last updated: 2026-07-04 (S4/S4b/S5 deployed) · Author: Друг 2 (bz5-bridge, VPS) · Base spec: `spec-v1.3-FINAL.md`
 
 Purpose: keep client (Друг 1) and server (Друг 2) synchronized on what the server
 has actually built and **deployed to prod**, what's live to code against, and
@@ -18,13 +18,13 @@ what's still pending. Living doc — updated as stages land.
 | **S3** pairing | device-flow (user_code + device_code), revoke, legacy bind | ✅ **done + deployed** |
 | **S4** full sync | `server_seq`/`updated_at`/`deleted_at`, pull, dual UNIQUE | ✅ **done + deployed** |
 | **S4b** ingest v2 | dedup on `(vehicle_id, client_uuid)` for push v2; legacy partial | ✅ **done + deployed** |
-| **S5** web cabinet | read-only account view | ⏳ not started |
+| **S5** web cabinet | `/v2/account/*` reads + `/cabinet` read-only browser view | ✅ **done + deployed** |
 
 Migrations live on prod: `0004` (auth), `0005` (client_uuid), `0006` (pairing),
 `0007` (server_seq + trigger + dual UNIQUE + updated_at/deleted_at), `0008` (old
 per-device UNIQUEs → partial `WHERE client_uuid IS NULL`). Data intact
 (devices=2, trips=54, snapshots=1315; verified byte-identical across both
-deploys). 101 server tests green.
+deploys). 110 server tests green.
 
 **S4b note:** instead of dropping the old per-device UNIQUEs, `0008` makes them
 partial (`WHERE client_uuid IS NULL`), complementary to `0007`'s
@@ -69,7 +69,7 @@ session). Store refresh in secure storage.
   first-write-wins (no overwrite). Full contract:
   `cloud-v2/c1-mapping-contract-review.md`. Also in served `CLIENT_API.md` §3.8.
 
-### Sync pull (restore) — `/v2/sync/pull` — NEW (S4, deploy pending)
+### Sync pull (restore) — `/v2/sync/pull` — NEW (S4)
 - `GET /v2/sync/pull?vehicle=<uuid>&since=<server_seq>&limit=<n>` (auth: device
   token bound to that vehicle **or** account JWT of the owner **or** admin) →
   `{items:[{entity,server_seq,client_uuid,deleted_at,data}], next_since, has_more}`.
@@ -77,7 +77,7 @@ session). Store refresh in secure storage.
   restore = pages from `since=0` until `has_more=false`. Covers **trips +
   snapshots** only (restore scope). Apply idempotently by `client_uuid` with an
   overlap window (D8, client half). `limit` 1–1000, default 500. Full contract:
-  served `CLIENT_API.md` §3.9. **Not live on prod until S4 is deployed.**
+  served `CLIENT_API.md` §3.9.
 
 ### Pairing (head unit ↔ account) — `/v2/pair/*`, `/v2/devices` — NEW (S3)
 Device-flow, two secrets (D9): `device_code` (long, held by the head unit,
@@ -91,6 +91,15 @@ releases the token) + `user_code` (short, shown on screen, typed on the phone).
   Fresh-device token is in `client_token`, released **exactly once**.
 - `GET /v2/devices` (account JWT) → your devices. `POST /v2/devices/{id}/revoke`
   (account JWT). Full shapes in served `CLIENT_API.md` §1.2/§1.3.
+
+### Account reads (cabinet + app) — `/v2/account/*` — NEW (S5)
+Account-JWT, scoped to vehicles the account owns (unowned `vehicle` → `403`):
+- `GET /v2/account/me` → `{user_id, email, role, vehicles:[{id, display_name,
+  manufacturer, model, model_year, trip_count, snapshot_count, device_count}]}`.
+- `GET /v2/account/trips?vehicle=&limit=&cursor=` → `PagedTrips` (id-desc cursor).
+- `GET /v2/account/snapshots?vehicle=&limit=&cursor=` → `PagedSnapshots`.
+Read-only web cabinet at **`/cabinet`** (email-OTP login, Overview/Devices/Trips/
+Snapshots). Full contract: served `CLIENT_API.md` §1.4.
 
 ### Owner-side (not for the client) — `/v1/admin/allowlist`
 `GET/POST/DELETE` (admin token). Owner manages who may sign in.
@@ -187,14 +196,14 @@ Recorded so paper matches code:
 
 ## 6. What Друг 2 does next (server)
 
-S4 (server_seq + pull + dual UNIQUE) and S4b (ingest dedup on
-`(vehicle_id, client_uuid)`) are **both deployed** (migrations `0007`, `0008`).
-Remaining: (1) **S5 (web cabinet)** — read-only account view; (2) a future tiny
-revision to drop the now-empty legacy partial indexes once no client pushes
-without a `client_uuid` (B2 gate: backfill confirmed on both devices). The pull
-payload includes `client_uuid`, so the restore path (§1.5 of the C1 plan) can
-adopt server uuids instead of regenerating — which makes post-reinstall restore
-conflict-free.
+S4, S4b, and S5 are all deployed (migrations `0007`, `0008`; S5 is code+static,
+no migration). Remaining: (1) **email relay** — flip `EMAIL_BACKEND=log`→real
+(owner: provider + API key + SPF/DKIM/DMARC); until then OTP codes only in
+`docker compose logs web`, and the cabinet / phone login work only for the owner
+via logs; (2) a future tiny revision to drop the now-empty legacy partial indexes
+once no client pushes without a `client_uuid` (B2 gate: backfill confirmed on both
+devices). The pull payload includes `client_uuid`, so the restore path (§1.5 of
+the C1 plan) can adopt server uuids instead of regenerating.
 
 Reviews & contracts for reference (same dir): `spec-v1.3-FINAL.md`,
 `spec-v1.0/1.1/1.2-server-review.md`, `c1-mapping-contract-review.md`.
