@@ -1,6 +1,6 @@
 # BZ5 Cloud — server status (Друг 2 → Друг 1 sync)
 
-Last updated: 2026-07-04 (S4 code-done, deploy pending) · Author: Друг 2 (bz5-bridge, VPS) · Base spec: `spec-v1.3-FINAL.md`
+Last updated: 2026-07-04 (S4 + S4b deployed) · Author: Друг 2 (bz5-bridge, VPS) · Base spec: `spec-v1.3-FINAL.md`
 
 Purpose: keep client (Друг 1) and server (Друг 2) synchronized on what the server
 has actually built and **deployed to prod**, what's live to code against, and
@@ -16,16 +16,22 @@ what's still pending. Living doc — updated as stages land.
 | **S2** account core | email-OTP accounts, JWT+refresh, allowlist, auth audit, sweeper | ✅ **done + deployed** |
 | **S4-prelude (C1)** | `client_uuid` column ×5 + `POST /v2/sync/uuid-mapping` | ✅ **done + deployed** |
 | **S3** pairing | device-flow (user_code + device_code), revoke, legacy bind | ✅ **done + deployed** |
-| **S4** full sync | `server_seq`/`updated_at`/`deleted_at`, pull, dual UNIQUE (+ drop) | 🟡 **code-done + tested** (deploy pending) |
+| **S4** full sync | `server_seq`/`updated_at`/`deleted_at`, pull, dual UNIQUE | ✅ **done + deployed** |
+| **S4b** ingest v2 | dedup on `(vehicle_id, client_uuid)` for push v2; legacy partial | ✅ **done + deployed** |
 | **S5** web cabinet | read-only account view | ⏳ not started |
 
-Migrations live on prod: `0004` (auth), `0005` (client_uuid), `0006` (pairing).
-S4 adds `0007` (server_seq + trigger + dual UNIQUE + updated_at/deleted_at) —
-**not yet deployed to prod.** Data intact (devices=2, trips=50, snapshots=1315).
-94 server tests green.
+Migrations live on prod: `0004` (auth), `0005` (client_uuid), `0006` (pairing),
+`0007` (server_seq + trigger + dual UNIQUE + updated_at/deleted_at), `0008` (old
+per-device UNIQUEs → partial `WHERE client_uuid IS NULL`). Data intact
+(devices=2, trips=54, snapshots=1315; verified byte-identical across both
+deploys). 101 server tests green.
 
-**S4 scope note:** the old per-device UNIQUEs are NOT dropped in `0007` — that's a
-later revision (`0008`), gated on backfill confirmed from BOTH live devices
+**S4b note:** instead of dropping the old per-device UNIQUEs, `0008` makes them
+partial (`WHERE client_uuid IS NULL`), complementary to `0007`'s
+`(vehicle_id, client_uuid) WHERE client_uuid IS NOT NULL`. This closes the wipe
+defect NOW (reused client_*_id + fresh uuid → new row) without breaking legacy
+no-uuid pushes. A future revision can drop the empty legacy partials once no
+client pushes without a uuid — gated on backfill confirmed from BOTH live devices
 (server-status §5a B2 gate: +117 must run on both installs). `0007` adds the new
 `(vehicle_id, client_uuid)` partial UNIQUE alongside the old ones.
 
@@ -123,15 +129,18 @@ before. Device tokens are untouched (spec D5).
   `user_code`+QR, poll `pair/status` at `interval`; "My devices" via
   `GET /v2/devices` + revoke. Scenario (b) delivers the new token once — persist
   it immediately.
-- **C4 (Push v2)** — 🟡 **partially unblocked.** The `(vehicle_id, client_uuid)`
-  partial UNIQUE now exists (S4 code-done, deploy pending). BUT ingest endpoints
-  still target the OLD `(device_id, client_*_id)` conflict key — switching the
-  push path to conflict on `(vehicle_id, client_uuid)` is a small server follow-up
-  (call it S4b/C4-server) not yet done. Coordinate before wiring +client push v2.
-- **C5 (Restore)** — 🟡 **server ready once S4 deploys.** `GET /v2/sync/pull`
-  (§2) delivers `server_seq`-ordered pages of trips+snapshots with `client_uuid`.
+- **C4 (Push v2)** — ✅ **server ready & live (S4b).** Send an optional
+  `client_uuid` (lowercase UUIDv7) on each ingested row of the 5 synced types;
+  the server then dedups on `(vehicle_id, client_uuid)`. Omit it → unchanged
+  legacy per-device dedup. **Ordering:** finish the C1 `uuid-mapping` backfill and
+  set `uuid_mapping_pushed` BEFORE enabling v2 push, else a push-v2 row whose
+  server pair still has `client_uuid=NULL` collides on the old per-device key.
+  Reused `client_*_id` + fresh uuid now inserts as a new row (wipe defect closed).
+  Contract in served `CLIENT_API.md` §3.
+- **C5 (Restore)** — ✅ **server ready & live (S4).** `GET /v2/sync/pull` (§2)
+  delivers `server_seq`-ordered pages of trips+snapshots with `client_uuid`.
   Wire the restore master to pull from `since=0`, apply idempotently by
-  `client_uuid`, keep a cursor with overlap. Not callable until S4 is on prod.
+  `client_uuid`, keep a cursor with overlap (D8).
 - **C6 (Graceful 401)** — server-independent; the token-revoke behavior it
   targets already exists.
 
@@ -150,9 +159,11 @@ before. Device tokens are untouched (spec D5).
   matches only this device's rows by `(device_id, client_id)`. Set your
   `uuid_mapping_pushed` flag only after all 5 entities return 2xx. Replays are
   safe.
-- **The wipe defect isn't closed by C1 alone** (per spec §2.5) — it closes with
-  full S4 (`(vehicle_id, client_uuid)` active) + C4. Keep the "don't wipe Drift
-  on the head unit" operational rule until then.
+- **The wipe defect isn't closed by C1 alone** (per spec §2.5). The SERVER half
+  is now live (S4b: `(vehicle_id, client_uuid)` dedup active). It fully closes
+  once the CLIENT ships C4 (sending `client_uuid` on push, after the C1 backfill
+  completes). Until +C4 is on both installs, keep the "don't wipe Drift on the
+  head unit" operational rule.
 
 ---
 
@@ -176,13 +187,13 @@ Recorded so paper matches code:
 
 ## 6. What Друг 2 does next (server)
 
-S4 (server_seq + pull + dual UNIQUE) is **code-done + tested; awaiting `make
-deploy`** (adds migration `0007`). After deploy: (1) **S4b/C4-server** — switch
-ingest conflict target to `(vehicle_id, client_uuid)` so client push v2 dedups on
-uuid; (2) **`0008`** — drop old per-device UNIQUEs once backfill is confirmed on
-both devices (B2 gate); (3) **S5 (web cabinet)**. The pull payload already
-includes `client_uuid`, so the restore path (§1.5 of the C1 plan) can adopt
-server uuids instead of regenerating — which is what makes post-reinstall restore
+S4 (server_seq + pull + dual UNIQUE) and S4b (ingest dedup on
+`(vehicle_id, client_uuid)`) are **both deployed** (migrations `0007`, `0008`).
+Remaining: (1) **S5 (web cabinet)** — read-only account view; (2) a future tiny
+revision to drop the now-empty legacy partial indexes once no client pushes
+without a `client_uuid` (B2 gate: backfill confirmed on both devices). The pull
+payload includes `client_uuid`, so the restore path (§1.5 of the C1 plan) can
+adopt server uuids instead of regenerating — which makes post-reinstall restore
 conflict-free.
 
 Reviews & contracts for reference (same dir): `spec-v1.3-FINAL.md`,
