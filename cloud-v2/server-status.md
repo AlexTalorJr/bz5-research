@@ -1,6 +1,6 @@
 # BZ5 Cloud — server status (Друг 2 → Друг 1 sync)
 
-Last updated: 2026-07-04 (S3 deployed) · Author: Друг 2 (bz5-bridge, VPS) · Base spec: `spec-v1.3-FINAL.md`
+Last updated: 2026-07-04 (S4 code-done, deploy pending) · Author: Друг 2 (bz5-bridge, VPS) · Base spec: `spec-v1.3-FINAL.md`
 
 Purpose: keep client (Друг 1) and server (Друг 2) synchronized on what the server
 has actually built and **deployed to prod**, what's live to code against, and
@@ -16,11 +16,18 @@ what's still pending. Living doc — updated as stages land.
 | **S2** account core | email-OTP accounts, JWT+refresh, allowlist, auth audit, sweeper | ✅ **done + deployed** |
 | **S4-prelude (C1)** | `client_uuid` column ×5 + `POST /v2/sync/uuid-mapping` | ✅ **done + deployed** |
 | **S3** pairing | device-flow (user_code + device_code), revoke, legacy bind | ✅ **done + deployed** |
-| **S4** full sync | `server_seq`/`updated_at`/`deleted_at`, pull, dual UNIQUE + drop | ⏳ not started |
+| **S4** full sync | `server_seq`/`updated_at`/`deleted_at`, pull, dual UNIQUE (+ drop) | 🟡 **code-done + tested** (deploy pending) |
 | **S5** web cabinet | read-only account view | ⏳ not started |
 
 Migrations live on prod: `0004` (auth), `0005` (client_uuid), `0006` (pairing).
-Data intact (devices=2, trips=50, snapshots=1315). 83 server tests green.
+S4 adds `0007` (server_seq + trigger + dual UNIQUE + updated_at/deleted_at) —
+**not yet deployed to prod.** Data intact (devices=2, trips=50, snapshots=1315).
+94 server tests green.
+
+**S4 scope note:** the old per-device UNIQUEs are NOT dropped in `0007` — that's a
+later revision (`0008`), gated on backfill confirmed from BOTH live devices
+(server-status §5a B2 gate: +117 must run on both installs). `0007` adds the new
+`(vehicle_id, client_uuid)` partial UNIQUE alongside the old ones.
 
 ---
 
@@ -55,6 +62,16 @@ session). Store refresh in secure storage.
 - Idempotent (replay → `already_set`), unmatched is fine, conflicts are
   first-write-wins (no overwrite). Full contract:
   `cloud-v2/c1-mapping-contract-review.md`. Also in served `CLIENT_API.md` §3.8.
+
+### Sync pull (restore) — `/v2/sync/pull` — NEW (S4, deploy pending)
+- `GET /v2/sync/pull?vehicle=<uuid>&since=<server_seq>&limit=<n>` (auth: device
+  token bound to that vehicle **or** account JWT of the owner **or** admin) →
+  `{items:[{entity,server_seq,client_uuid,deleted_at,data}], next_since, has_more}`.
+- Ordered by a **single global `server_seq`** (total order, no ties). Full
+  restore = pages from `since=0` until `has_more=false`. Covers **trips +
+  snapshots** only (restore scope). Apply idempotently by `client_uuid` with an
+  overlap window (D8, client half). `limit` 1–1000, default 500. Full contract:
+  served `CLIENT_API.md` §3.9. **Not live on prod until S4 is deployed.**
 
 ### Pairing (head unit ↔ account) — `/v2/pair/*`, `/v2/devices` — NEW (S3)
 Device-flow, two secrets (D9): `device_code` (long, held by the head unit,
@@ -106,10 +123,15 @@ before. Device tokens are untouched (spec D5).
   `user_code`+QR, poll `pair/status` at `interval`; "My devices" via
   `GET /v2/devices` + revoke. Scenario (b) delivers the new token once — persist
   it immediately.
-- **C4 (Push v2)** — ⛔ **blocked on server S4.** Ingest still dedups on
-  `client_*_id`; push-by-`client_uuid` + `(vehicle_id, client_uuid)` UNIQUE come
-  with full S4.
-- **C5 (Restore)** — ⛔ **blocked on server S4** (pull endpoint + `server_seq`).
+- **C4 (Push v2)** — 🟡 **partially unblocked.** The `(vehicle_id, client_uuid)`
+  partial UNIQUE now exists (S4 code-done, deploy pending). BUT ingest endpoints
+  still target the OLD `(device_id, client_*_id)` conflict key — switching the
+  push path to conflict on `(vehicle_id, client_uuid)` is a small server follow-up
+  (call it S4b/C4-server) not yet done. Coordinate before wiring +client push v2.
+- **C5 (Restore)** — 🟡 **server ready once S4 deploys.** `GET /v2/sync/pull`
+  (§2) delivers `server_seq`-ordered pages of trips+snapshots with `client_uuid`.
+  Wire the restore master to pull from `since=0`, apply idempotently by
+  `client_uuid`, keep a cursor with overlap. Not callable until S4 is on prod.
 - **C6 (Graceful 401)** — server-independent; the token-revoke behavior it
   targets already exists.
 
@@ -154,10 +176,13 @@ Recorded so paper matches code:
 
 ## 6. What Друг 2 does next (server)
 
-On Alex's word: **full S4 (server_seq/pull/dual-UNIQUE + old-constraint drop)**
-then **S5 (web cabinet)**. When S4's pull ships, it will include `client_uuid` in
-the payload so your restore path (§1.5 of the C1 plan) can adopt server uuids
-instead of regenerating — which is what makes post-reinstall restore
+S4 (server_seq + pull + dual UNIQUE) is **code-done + tested; awaiting `make
+deploy`** (adds migration `0007`). After deploy: (1) **S4b/C4-server** — switch
+ingest conflict target to `(vehicle_id, client_uuid)` so client push v2 dedups on
+uuid; (2) **`0008`** — drop old per-device UNIQUEs once backfill is confirmed on
+both devices (B2 gate); (3) **S5 (web cabinet)**. The pull payload already
+includes `client_uuid`, so the restore path (§1.5 of the C1 plan) can adopt
+server uuids instead of regenerating — which is what makes post-reinstall restore
 conflict-free.
 
 Reviews & contracts for reference (same dir): `spec-v1.3-FINAL.md`,
