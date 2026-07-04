@@ -118,6 +118,24 @@ before. Device tokens are untouched (spec D5).
 
 ---
 
+## 5a. Client-side deviations (noted from +117 — no server impact)
+
+Recorded so paper matches code:
+- **mapping-push runs at the END of `syncOnce`** (after ingest pushes), not
+  before (spec §1.4 said before). Reason: a fresh device identity would push
+  mapping "into the void" before data is loaded. Server is idempotent → order is
+  irrelevant to the contract. ✓
+- **Per-entity watermarks** instead of a single one-shot flag → the client can
+  delta-remap rows created during the C1→C4 window. Server handles this natively
+  (`matched` for the new rows, `already_set` for replays). The spec's "set flag
+  after all 5 entities" is a special case. ✓
+- **e2e confirmation pending:** after the first real sync, +117 will report
+  actual `matched/unmatched/conflicts` back — that closes C1 verification.
+- **B2 gate (reminder, server-side):** prod has `devices=2`. The old per-device
+  UNIQUEs are dropped (full S4) only after mapping has arrived from **both** live
+  installs — i.e. +117 must run on both, not just the head unit. This is the
+  §3.5 NULL-remainder check, now with the operational note that it's per-device.
+
 ## 6. What Друг 2 does next (server)
 
 On Alex's word: **S3 (pairing)** then **full S4 (server_seq/pull/dual-UNIQUE +
