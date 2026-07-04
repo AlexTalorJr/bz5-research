@@ -1,6 +1,6 @@
 # BZ5 Cloud — server status (Друг 2 → Друг 1 sync)
 
-Last updated: 2026-07-04 (S4/S4b/S5 deployed) · Author: Друг 2 (bz5-bridge, VPS) · Base spec: `spec-v1.3-FINAL.md`
+Last updated: 2026-07-04 (S1–S5 + email relay LIVE) · Author: Друг 2 (bz5-bridge, VPS) · Base spec: `spec-v1.3-FINAL.md`
 
 Purpose: keep client (Друг 1) and server (Друг 2) synchronized on what the server
 has actually built and **deployed to prod**, what's live to code against, and
@@ -115,11 +115,12 @@ before. Device tokens are untouched (spec D5).
   the seed owner (bootstrap). **Bootstrap not yet performed** — seed
   `users.email` is still NULL until that first verify.
 - `JWT_SECRET` set (rotating it = global logout).
-- ⚠️ **Email delivery is NOT live yet.** `EMAIL_BACKEND=log` → OTP codes are
-  written to the server log, not emailed. Real delivery (Resend/Postmark/SES +
-  SPF/DKIM/DMARC) is pending on Alex. **Implication for C2 testing:** until the
-  relay is on, only the owner can complete a login (by reading the code from the
-  server log). Plan client auth-UI testing around that, or wait for the relay.
+- ✅ **Email delivery is LIVE.** `EMAIL_BACKEND=resend`, from
+  `noreply@carbridge.neardo.work` (domain verified in Resend: DKIM + SPF/MX on the
+  `send.` subdomain, DMARC-aligned via DKIM). Real OTP emails now reach any
+  allowlisted address — C2 end-to-end login testing is unblocked. Sending is a
+  send-only API key; a relay hiccup returns `200` (not `500`) and is logged, so it
+  never leaks enumeration.
 - Retention (auto): otp_codes 1d, auth_events 365d, sessions 60d idle.
 
 ---
@@ -130,9 +131,9 @@ before. Device tokens are untouched (spec D5).
   columns + `/v2/sync/uuid-mapping` deployed; the 404-before-deploy window is
   effectively gone. Contract (Q1–Q8) confirmed in `c1-mapping-contract-review.md`.
   You can ship +117 on Alex's go.
-- **C2 (Auth UI, phone)** — ✅ **server ready.** Endpoints in §2. Caveat: real
-  email relay pending (§3) → end-to-end login testing limited to owner-via-logs
-  until then.
+- **C2 (Auth UI, phone)** — ✅ **server ready & relay LIVE.** Endpoints in §2;
+  real OTP emails now delivered (Resend, §3). End-to-end login testing is fully
+  unblocked for any allowlisted address.
 - **C3 (Pairing UI)** — ✅ **server ready & live (S3).** Wire `pair/start` (with
   device_token for the current install, without for a fresh one), show
   `user_code`+QR, poll `pair/status` at `interval`; "My devices" via
@@ -196,14 +197,14 @@ Recorded so paper matches code:
 
 ## 6. What Друг 2 does next (server)
 
-S4, S4b, and S5 are all deployed (migrations `0007`, `0008`; S5 is code+static,
-no migration). Remaining: (1) **email relay** — flip `EMAIL_BACKEND=log`→real
-(owner: provider + API key + SPF/DKIM/DMARC); until then OTP codes only in
-`docker compose logs web`, and the cabinet / phone login work only for the owner
-via logs; (2) a future tiny revision to drop the now-empty legacy partial indexes
-once no client pushes without a `client_uuid` (B2 gate: backfill confirmed on both
-devices). The pull payload includes `client_uuid`, so the restore path (§1.5 of
-the C1 plan) can adopt server uuids instead of regenerating.
+S4, S4b, S5 all deployed; **email relay is now LIVE** (Resend from
+`noreply@carbridge.neardo.work`). The cloud-v2 server side (S1–S5 + relay) is
+**complete**. Only remaining server item: a future tiny revision to drop the
+now-empty legacy partial indexes once no client pushes without a `client_uuid`
+(B2 gate: backfill confirmed on both devices). The pull payload includes
+`client_uuid`, so the restore path (§1.5 of the C1 plan) can adopt server uuids
+instead of regenerating. The ball is now on the client (C4 push v2, C5 restore —
+both server-ready) and C2 auth UI (relay unblocks end-to-end).
 
 Reviews & contracts for reference (same dir): `spec-v1.3-FINAL.md`,
 `spec-v1.0/1.1/1.2-server-review.md`, `c1-mapping-contract-review.md`.
