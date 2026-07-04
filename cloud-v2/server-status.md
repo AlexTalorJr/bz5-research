@@ -1,6 +1,6 @@
 # BZ5 Cloud — server status (Друг 2 → Друг 1 sync)
 
-Last updated: 2026-07-04 · Author: Друг 2 (bz5-bridge, VPS) · Base spec: `spec-v1.3-FINAL.md`
+Last updated: 2026-07-04 (S3 deployed) · Author: Друг 2 (bz5-bridge, VPS) · Base spec: `spec-v1.3-FINAL.md`
 
 Purpose: keep client (Друг 1) and server (Друг 2) synchronized on what the server
 has actually built and **deployed to prod**, what's live to code against, and
@@ -15,12 +15,12 @@ what's still pending. Living doc — updated as stages land.
 | **S1** hygiene | offsite backup (Scaleway+age, cron), `make test` isolated to a test DB | ✅ done |
 | **S2** account core | email-OTP accounts, JWT+refresh, allowlist, auth audit, sweeper | ✅ **done + deployed** |
 | **S4-prelude (C1)** | `client_uuid` column ×5 + `POST /v2/sync/uuid-mapping` | ✅ **done + deployed** |
-| **S3** pairing | device-flow (user_code + device_code), revoke, legacy bind | ⏳ not started |
+| **S3** pairing | device-flow (user_code + device_code), revoke, legacy bind | ✅ **done + deployed** |
 | **S4** full sync | `server_seq`/`updated_at`/`deleted_at`, pull, dual UNIQUE + drop | ⏳ not started |
 | **S5** web cabinet | read-only account view | ⏳ not started |
 
-Migrations live on prod: `0004` (auth tables), `0005` (client_uuid). Data intact
-(devices=2, trips=50, snapshots=1315). 75 server tests green.
+Migrations live on prod: `0004` (auth), `0005` (client_uuid), `0006` (pairing).
+Data intact (devices=2, trips=50, snapshots=1315). 83 server tests green.
 
 ---
 
@@ -56,6 +56,19 @@ session). Store refresh in secure storage.
   first-write-wins (no overwrite). Full contract:
   `cloud-v2/c1-mapping-contract-review.md`. Also in served `CLIENT_API.md` §3.8.
 
+### Pairing (head unit ↔ account) — `/v2/pair/*`, `/v2/devices` — NEW (S3)
+Device-flow, two secrets (D9): `device_code` (long, held by the head unit,
+releases the token) + `user_code` (short, shown on screen, typed on the phone).
+- `POST /v2/pair/start` (Bearer device_token for live device / no auth for fresh)
+  → `{device_code, user_code, expires_in, interval}`.
+- `POST /v2/pair/claim` (Bearer account JWT) `{user_code, vehicle_id?}` →
+  `{"ok":true}`. `404 pairing_invalid`, `400 no_vehicle`.
+- `POST /v2/pair/status` (no auth — device_code is the secret) `{device_code}` →
+  `{status: pending|paired|expired, device_id?, client_token?, interval?}`.
+  Fresh-device token is in `client_token`, released **exactly once**.
+- `GET /v2/devices` (account JWT) → your devices. `POST /v2/devices/{id}/revoke`
+  (account JWT). Full shapes in served `CLIENT_API.md` §1.2/§1.3.
+
 ### Owner-side (not for the client) — `/v1/admin/allowlist`
 `GET/POST/DELETE` (admin token). Owner manages who may sign in.
 
@@ -88,8 +101,11 @@ before. Device tokens are untouched (spec D5).
 - **C2 (Auth UI, phone)** — ✅ **server ready.** Endpoints in §2. Caveat: real
   email relay pending (§3) → end-to-end login testing limited to owner-via-logs
   until then.
-- **C3 (Pairing UI)** — ⛔ **blocked on server S3** (device-flow endpoints not
-  built). Don't wire pairing calls yet.
+- **C3 (Pairing UI)** — ✅ **server ready & live (S3).** Wire `pair/start` (with
+  device_token for the current install, without for a fresh one), show
+  `user_code`+QR, poll `pair/status` at `interval`; "My devices" via
+  `GET /v2/devices` + revoke. Scenario (b) delivers the new token once — persist
+  it immediately.
 - **C4 (Push v2)** — ⛔ **blocked on server S4.** Ingest still dedups on
   `client_*_id`; push-by-`client_uuid` + `(vehicle_id, client_uuid)` UNIQUE come
   with full S4.
@@ -138,8 +154,8 @@ Recorded so paper matches code:
 
 ## 6. What Друг 2 does next (server)
 
-On Alex's word: **S3 (pairing)** then **full S4 (server_seq/pull/dual-UNIQUE +
-old-constraint drop)**. When S4's pull ships, it will include `client_uuid` in
+On Alex's word: **full S4 (server_seq/pull/dual-UNIQUE + old-constraint drop)**
+then **S5 (web cabinet)**. When S4's pull ships, it will include `client_uuid` in
 the payload so your restore path (§1.5 of the C1 plan) can adopt server uuids
 instead of regenerating — which is what makes post-reinstall restore
 conflict-free.
