@@ -1,0 +1,6 @@
+id,client_sweep_id,started_at,ended_at,tx_ecu,rx_ecu,start_did,end_did,car_state,notes,total_probes,valid_responses,client_uuid
+39,1,2026-10-22 15:25:46+00,2026-10-22 15:27:36+00,722,72A,0000,03FF,"P+Ready, AUTO 19C, A/C on","climate candidates, bridge | queue 1/5 | exit=completed",1024,7,01a16437-e0e5-7205-86a3-c89454c25fa2
+40,2,2026-10-22 15:27:36+00,2026-10-22 15:29:25+00,755,75D,0000,03FF,"P+Ready, AUTO 19C, A/C on","climate candidates, bridge | queue 2/5 | exit=completed",1024,5,01a16439-919d-7214-ab39-a04aefe93993
+41,3,2026-10-22 15:29:25+00,2026-10-22 15:31:12+00,716,71E,0000,03FF,"P+Ready, AUTO 19C, A/C on","climate candidates, bridge | queue 3/5 | exit=completed",1024,1,01a1643b-3a13-7a90-acbd-f35c16c92948
+42,4,2026-10-22 15:31:12+00,2026-10-22 15:33:08+00,744,74C,0000,03FF,"P+Ready, AUTO 19C, A/C on","climate candidates, bridge | queue 4/5 | exit=completed",1024,15,01a1643c-dcb3-71c6-b242-f8f2f9185101
+43,5,2026-10-22 15:33:08+00,2026-10-22 15:37:21+00,760,768,0000,03FF,"P+Ready, AUTO 19C, A/C on","climate candidates, bridge | queue 5/5 | exit=completed",1024,1,01a1643e-9ff7-78fd-969e-1b8d5b6efe29

@@ -1,0 +1,20 @@
+{
+ "id": 115,
+ "kind": "bleStartSweepQueue",
+ "args": {
+  "notes": "climate candidates, bridge",
+  "end_did": "03FF",
+  "tx_list": "722, 755, 716, 744, 760",
+  "car_state": "P+Ready, AUTO 19C, A/C on",
+  "start_did": "0000"
+ },
+ "status": "ok",
+ "created_at": "2026-10-22T15:25:44.830848Z",
+ "dispatched_at": "2026-10-22T15:25:45.609755Z",
+ "finished_at": "2026-10-22T15:25:45.883622Z",
+ "result": {
+  "ecus": 5,
+  "kind": "sweep_queue",
+  "started": true
+ }
+}
