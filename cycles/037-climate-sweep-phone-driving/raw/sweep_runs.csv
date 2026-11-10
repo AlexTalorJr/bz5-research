@@ -1,0 +1,6 @@
+id,client_sweep_id,started_at,ended_at,tx_ecu,rx_ecu,start_did,end_did,car_state,notes,total_probes,valid_responses,client_uuid
+64,21,2026-11-10 15:36:53+00,2026-11-10 15:38:51+00,722,72A,0000,03FF,driving,"C034 repeat via phone dongle, bridge | queue 1/5 | exit=completed",1024,7,01a1c61a-e3ec-7c51-83e2-aba3c1b43d44
+65,22,2026-11-10 15:38:51+00,2026-11-10 15:54:23+00,755,75D,0000,03FF,driving,"C034 repeat via phone dongle, bridge | queue 2/5 | exit=watchdog_stall",1024,5,01a1c61c-af83-7e5b-b772-ba43e5b49c72
+66,23,2026-11-10 15:57:57+00,2026-11-10 16:00:00+00,716,71E,0000,03FF,driving,"C034 repeat via phone dongle, part 2, bridge | queue 1/3 | exit=completed",1024,1,01a1c62e-2e71-7737-bf42-e35b8403e3eb
+67,24,2026-11-10 16:00:00+00,2026-11-10 16:02:01+00,744,74C,0000,03FF,driving,"C034 repeat via phone dongle, part 2, bridge | queue 2/3 | exit=completed",1024,15,01a1c630-0c7c-7ac6-8c94-c9c85b4fe1aa
+68,25,2026-11-10 16:02:01+00,2026-11-10 16:06:36+00,760,768,0000,03FF,driving,"C034 repeat via phone dongle, part 2, bridge | queue 3/3 | exit=completed",1024,1,01a1c631-e7b1-749c-b1bf-9251272bad0a
